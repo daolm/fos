@@ -132,9 +132,9 @@ class PollController extends Controller
             
             if (strtotime($poll->start_at) < time()) {
                 $poll->start_at = date('Y-m-d H:i:s', time());
-                if ((strtotime($poll->end_at) - strtotime($poll->start_at)) < 600) {
-                    $poll->end_at = date('Y-m-d H:i:s', strtotime($poll->start_at) + 600);
-                }
+            }
+            if ((strtotime($poll->end_at) - strtotime($poll->start_at)) < 10 * 60) {
+                $poll->end_at = date('Y-m-d H:i:s', strtotime($poll->start_at) + 10 * 60);
             }
             
             if ($poll->save()) {
@@ -273,9 +273,14 @@ class PollController extends Controller
 
             if (!$voting && !$voted && strtotime($model->start_at) < time()) {
                 $model->start_at = date('Y-m-d H:i:s', time());
-                if (strtotime($model->end_at) - strtotime($model->start_at) < 10) {
-                    $model->end_at = date('Y-m-d H:i:s', strtotime($model->start_at) + 10);
-                }
+            }
+            
+            if ($voting && strtotime($model->end_at) < time()) {
+                $model->end_at = date('Y-m-d H:i:s', time());
+            }
+            
+            if (strtotime($model->end_at) - strtotime($model->start_at) < 10 * 60) {
+                $model->end_at = date('Y-m-d H:i:s', strtotime($model->start_at) + 10 * 60);
             }
 
             if ($model->save()) {
